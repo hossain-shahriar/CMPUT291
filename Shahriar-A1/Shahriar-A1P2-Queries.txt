@@ -1,0 +1,89 @@
+CREATE TABLE musicPerson (
+	pid CHAR(10) PRIMARY KEY,
+	name CHAR(30),
+	birthYear YEAR
+)
+
+CREATE TABLE singer (
+	pid CHAR(10) PRIMARY KEY,
+	FOREIGN KEY(pid) REFERENCES musicPerson ON DELETE CASCADE
+)
+
+CREATE TABLE crew (
+	pid CHAR(10) PRIMARY KEY,
+	FOREIGN KEY(pid) REFERENCES musicPerson ON DELETE CASCADE
+)
+
+CREATE TABLE jobs (
+	job CHAR(15) PRIMARY KEY
+)
+
+CREATE TABLE genres (
+	genre CHAR(15) PRIMARY KEY
+)
+
+CREATE TABLE music (
+	title CHAR(10),
+	release_year YEAR,
+	runtime TIME,
+	PRIMARY KEY(title, release_year)
+)
+
+CREATE TABLE singerOf (
+	pid CHAR(10),
+	title CHAR(10),
+	release_year YEAR,
+	role CHAR(30),
+	PRIMARY KEY(pid, title, release_year),
+	FOREIGN KEY(pid) REFERENCES singer,
+	FOREIGN KEY(title, release_year) REFERENCES music
+)
+
+CREATE TABLE crewOf (
+	pid CHAR(10),
+	title CHAR(10),
+	release_year YEAR,
+	job CHAR(15),
+	PRIMARY KEY(pid, title, release_year, job),
+	FOREIGN KEY(pid) REFERENCES singer,
+	FOREIGN KEY(title, release_year) REFERENCES music,
+	FOREIGN KEY(job) REFERENCES jobs
+)
+
+CREATE TABLE recommend (
+	title CHAR(10),
+	release_year YEAR,
+	re_title CHAR(10),
+	re_release_year YEAR,
+	score DECIMAL(2, 1)
+	PRIMARY KEY(title, release_year, re_title, re_release_year),
+	FOREIGN KEY(title, release_year, re_title, re_release_year) REFERENCES music
+)
+
+CREATE TABLE mgenre (
+	genre CHAR(15),
+	title CHAR(10),
+	release_year YEAR,
+	PRIMARY KEY(genre, title, release_year),
+	FOREIGN KEY(genre) REFERENCES genres,
+	FOREIGN KEY(title, release_year) REFERENCES music
+)
+
+CREATE TABLE E1 (
+	a11 TEXT(20) PRIMARY KEY,
+	a12 TEXT(20),
+	job CHAR(15),
+	FOREIGN KEY(job) REFERENCES jobs
+)
+
+CREATE TABLE E2 (
+	a21 TEXT(20),
+	a11 TEXT(20),
+	a22 TEXT(20),
+	a1 TEXT(20),
+	title CHAR(10),
+	release_year YEAR,
+	PRIMARY KEY(a21, a11),
+	FOREIGN KEY(a11) REFERENCES E1,
+	FOREIGN KEY(title, release_year) REFERENCES music
+)
